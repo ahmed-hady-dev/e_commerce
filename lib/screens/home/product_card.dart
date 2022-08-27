@@ -5,15 +5,17 @@ class ProductCard extends StatelessWidget {
   const ProductCard({
     Key? key,
     required this.product,
+    this.widthFactor = 2.5,
   }) : super(key: key);
   final Product product;
-
+  final double widthFactor;
   @override
   Widget build(BuildContext context) {
+    var widthValue = MediaQuery.of(context).size.width / widthFactor;
     return Stack(
       children: [
         Container(
-          width: MediaQuery.of(context).size.width / 2.5,
+          width: widthValue,
           height: 150.0,
           child: Image.network(
             product.imageUrl,

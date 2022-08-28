@@ -3,7 +3,7 @@ import 'package:e_commerce/screens/home/product_card.dart';
 import 'package:e_commerce/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 
-import '../../model/categry_model.dart';
+import '../../model/category_model.dart';
 import '../../widgets/custom_nav_bar.dart';
 
 class CatalogScreen extends StatelessWidget {

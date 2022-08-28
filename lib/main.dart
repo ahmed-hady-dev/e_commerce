@@ -1,3 +1,4 @@
+import 'package:e_commerce/blocs/wishlist/wishlist_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,17 +32,23 @@ void main() async {
   await CacheHelper.getTheme ?? await CacheHelper.cacheTheme(value: false);
   bool? isDark = await CacheHelper.getTheme;
   //===============================================================
-  BlocOverrides.runZoned(
-    () {
-      runApp(EasyLocalization(
-        child: MyApp(isDark: isDark!),
-        path: 'assets/translation',
-        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
-        fallbackLocale: const Locale('en', 'US'),
-      ));
-    },
-    blocObserver: MyBlocObserver(),
-  );
+  runApp(EasyLocalization(
+    child: MyApp(isDark: isDark!),
+    path: 'assets/translation',
+    supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
+    fallbackLocale: const Locale('en', 'US'),
+  ));
+  // BlocOverrides.runZoned(
+  //   () {
+  //     runApp(EasyLocalization(
+  //       child: MyApp(isDark: isDark!),
+  //       path: 'assets/translation',
+  //       supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
+  //       fallbackLocale: const Locale('en', 'US'),
+  //     ));
+  //   },
+  //   blocObserver: MyBlocObserver(),
+  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -51,6 +58,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
+          BlocProvider(create: (context) => WishlistBloc()..add(StartWishlist())),
           BlocProvider(create: (context) => ThemeCubit()..changeTheme(themeModeFromCache: isDark)),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(

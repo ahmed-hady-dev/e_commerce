@@ -1,14 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:e_commerce/core/router/router.dart';
 import 'package:e_commerce/model/product_model.dart';
-import 'package:e_commerce/model/wishlist_model.dart';
-import 'package:e_commerce/model/wishlist_model.dart';
+import 'package:e_commerce/screens/cart/cart_screen.dart';
 import 'package:e_commerce/widgets/hero_carousel_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/wishlist/wishlist_bloc.dart';
 import '../../widgets/custom_appbar.dart';
-import '../../widgets/custom_nav_bar.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({Key? key, required this.product}) : super(key: key);
@@ -19,7 +19,7 @@ class ProductScreen extends StatelessWidget {
       appBar: CustomAppbar(text: product.name),
       bottomNavigationBar: BottomAppBar(
           color: Colors.black,
-          child: Container(
+          child: SizedBox(
               height: 70.0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -45,10 +45,17 @@ class ProductScreen extends StatelessWidget {
                           ));
                     },
                   ),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.white),
-                      onPressed: () {},
-                      child: Text('ADD TO CART', style: Theme.of(context).textTheme.headline3))
+                  BlocBuilder<CartBloc, CartState>(
+                    builder: (context, state) {
+                      return ElevatedButton(
+                          style: ElevatedButton.styleFrom(primary: Colors.white),
+                          onPressed: () {
+                            context.read<CartBloc>().add(CartProductAdded(product));
+                            MagicRouter.navigateTo(CartScreen());
+                          },
+                          child: Text('ADD TO CART', style: Theme.of(context).textTheme.headline3));
+                    },
+                  )
                 ],
               ))),
       body: ListView(

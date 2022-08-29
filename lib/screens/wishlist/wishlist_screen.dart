@@ -1,5 +1,3 @@
-import 'package:e_commerce/model/product_model.dart';
-import 'package:e_commerce/model/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +17,7 @@ class WishlistScreen extends StatelessWidget {
       body: BlocBuilder<WishlistBloc, WishlistState>(
         builder: (context, state) {
           if (state is WishlistLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (state is WishlistLoaded) {
             return GridView.builder(
@@ -27,10 +25,7 @@ class WishlistScreen extends StatelessWidget {
                   vertical: 8,
                   horizontal: 16.0,
                 ),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  childAspectRatio: 2.4,
-                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1, childAspectRatio: 2.4),
                 itemCount: state.wishlist.products.length,
                 itemBuilder: (context, index) {
                   return ProductCard(
@@ -41,7 +36,7 @@ class WishlistScreen extends StatelessWidget {
                   );
                 });
           } else {
-            return Text('Something went wrong', style: const TextStyle());
+            return const Text('Something went wrong', style: TextStyle());
           }
         },
       ),

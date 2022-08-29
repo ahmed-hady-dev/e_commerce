@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/cart_product_card.dart';
 import '../../widgets/custom_appbar.dart';
-import '../../widgets/custom_nav_bar.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -14,7 +13,7 @@ class CartScreen extends StatelessWidget {
         appBar: const CustomAppbar(text: 'Cart'),
         bottomNavigationBar: BottomAppBar(
             color: Colors.black,
-            child: Container(
+            child: SizedBox(
                 height: 70.0,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -85,7 +84,7 @@ class CartScreen extends StatelessWidget {
                           width: MediaQuery.of(context).size.width,
                           height: 50.0,
                           margin: const EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(color: Colors.black),
+                          decoration: const BoxDecoration(color: Colors.black),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 30.0),
                             child: Row(

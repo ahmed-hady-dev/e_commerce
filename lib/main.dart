@@ -9,7 +9,7 @@ import 'core/theme/theme_cubit.dart';
 
 import 'core/dioHelper/dio_helper.dart';
 import 'core/router/router.dart';
-import 'screens/home/home_screen.dart';
+import 'screens/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
               locale: context.locale,
               supportedLocales: context.supportedLocales,
               localizationsDelegates: context.localizationDelegates,
-              home: const HomeScreen(),
+              home: const SplashScreen(),
             );
           },
         ));

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "878221574776",
+    "project_id": "max-ecommerce-a4207",
+    "storage_bucket": "max-ecommerce-a4207.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878221574776:android:9c6a94cb4dbb5f32eb238d",
+        "android_client_info": {
+          "package_name": "com.hady.dev.e_commerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878221574776-r9fte6guseklmpe6i5c79qs7qi8lkcpd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLmwbHCvVLRGNhxA8QeYbCV1WjWd5CteU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878221574776-r9fte6guseklmpe6i5c79qs7qi8lkcpd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

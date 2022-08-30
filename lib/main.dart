@@ -1,5 +1,6 @@
 import 'package:e_commerce/blocs/cart/cart_bloc.dart';
 import 'package:e_commerce/blocs/wishlist/wishlist_bloc.dart';
+import 'package:e_commerce/simple_bloc_observer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +33,7 @@ void main() async {
   await CacheHelper.getTheme ?? await CacheHelper.cacheTheme(value: false);
   bool? isDark = await CacheHelper.getTheme;
   //===============================================================
+  Bloc.observer = SimpleBlocObserver();
   runApp(EasyLocalization(
     child: MyApp(isDark: isDark!),
     path: 'assets/translation',

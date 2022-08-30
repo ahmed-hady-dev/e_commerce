@@ -1,10 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:e_commerce/model/category_model.dart';
 import 'package:e_commerce/screens/home/product_carousel.dart';
 import 'package:e_commerce/widgets/section_title.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../model/product_model.dart';
+import '../../blocs/category/category_bloc.dart';
+import '../../blocs/product/product_bloc.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/custom_nav_bar.dart';
 import '../../widgets/hero_carousel_card.dart';
@@ -19,24 +20,62 @@ class HomeScreen extends StatelessWidget {
       bottomNavigationBar: const CustomNavBar(),
       body: Column(
         children: [
-          Container(
-            child: CarouselSlider(
-              options: CarouselOptions(
-                  aspectRatio: 1.5,
-                  enlargeCenterPage: true,
-                  viewportFraction: 0.9,
-                  enlargeStrategy: CenterPageEnlargeStrategy.height),
-              items: Category.categories
-                  .map(
-                    (category) => HeroCarouselCard(category: category),
-                  )
-                  .toList(),
-            ),
+          BlocBuilder<CategoryBloc, CategoryState>(
+            builder: (context, state) {
+              if (state is CategoryLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is CategoryLoaded) {
+                return CarouselSlider(
+                  options: CarouselOptions(
+                      aspectRatio: 1.5,
+                      enlargeCenterPage: true,
+                      viewportFraction: 0.9,
+                      enlargeStrategy: CenterPageEnlargeStrategy.height),
+                  items: state.categories
+                      .map(
+                        (category) => HeroCarouselCard(category: category),
+                      )
+                      .toList(),
+                );
+              } else {
+                return Center(child: Text('Something went wrong.', style: Theme.of(context).textTheme.bodyText2));
+              }
+            },
           ),
           const SectionTitle(title: 'RECOMMENDED'),
-          ProductCarousel(products: Product.products.where((product) => product.isRecommended).toList()),
+          BlocBuilder<ProductBloc, ProductState>(
+            builder: (context, state) {
+              if (state is ProductLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is ProductLoaded) {
+                return ProductCarousel(
+                  products: state.products.where((product) => product.isRecommended).toList(),
+                );
+              } else {
+                return Center(child: Text('Something went wrong.', style: Theme.of(context).textTheme.bodyText2));
+              }
+            },
+          ),
           const SectionTitle(title: 'MOST POPULAR'),
-          ProductCarousel(products: Product.products.where((product) => product.isPopular).toList()),
+          BlocBuilder<ProductBloc, ProductState>(
+            builder: (context, state) {
+              if (state is ProductLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is ProductLoaded) {
+                return ProductCarousel(
+                  products: state.products.where((product) => product.isPopular).toList(),
+                );
+              } else {
+                return Center(child: Text('Something went wrong.', style: Theme.of(context).textTheme.bodyText2));
+              }
+            },
+          )
+          // ProductCarousel(
+          //   products: Product.products.where((product) => product.isPopular).toList(),
+          // ),
         ],
       ),
     );

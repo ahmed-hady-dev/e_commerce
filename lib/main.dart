@@ -1,10 +1,14 @@
 import 'package:e_commerce/blocs/cart/cart_bloc.dart';
+import 'package:e_commerce/blocs/category/category_bloc.dart';
 import 'package:e_commerce/blocs/wishlist/wishlist_bloc.dart';
+import 'package:e_commerce/repositories/category/category_repository.dart';
+import 'package:e_commerce/repositories/product/product_repository.dart';
 import 'package:e_commerce/simple_bloc_observer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'blocs/product/product_bloc.dart';
 import 'core/getStorageCacheHelper/get_storage_cache_helper.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/theme_cubit.dart';
@@ -65,6 +69,16 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (context) => WishlistBloc()..add(StartWishlist())),
           BlocProvider(create: (context) => CartBloc()..add(CartStarted())),
           BlocProvider(create: (context) => ThemeCubit()..changeTheme(themeModeFromCache: isDark)),
+          BlocProvider(
+            create: (context) => CategoryBloc(
+              categoryRepository: CategoryRepository(),
+            )..add(LoadCategories()),
+          ),
+          BlocProvider(
+            create: (context) => ProductBloc(
+              productRepository: ProductRepository(),
+            )..add(LoadProduct()),
+          ),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(
           builder: (context, state) {
@@ -74,7 +88,6 @@ class MyApp extends StatelessWidget {
               navigatorKey: navigatorKey,
               onGenerateRoute: onGenerateRoute,
               theme: lightTheme(context),
-              // darkTheme: darkTheme(context),
               locale: context.locale,
               supportedLocales: context.supportedLocales,
               localizationsDelegates: context.localizationDelegates,

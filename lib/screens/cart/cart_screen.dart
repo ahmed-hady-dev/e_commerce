@@ -1,4 +1,7 @@
 import 'package:e_commerce/blocs/cart/cart_bloc.dart';
+import 'package:e_commerce/core/router/router.dart';
+import 'package:e_commerce/widgets/order_summery.dart';
+import 'package:e_commerce/screens/checkout/checkout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,7 +24,7 @@ class CartScreen extends StatelessWidget {
                   children: <Widget>[
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.white),
-                        onPressed: () {},
+                        onPressed: () => MagicRouter.navigateTo(const CheckoutScreen()),
                         child: Text('GO TO CHECKOUT', style: Theme.of(context).textTheme.headline3))
                   ],
                 ))),
@@ -68,61 +71,7 @@ class CartScreen extends StatelessWidget {
                                 )),
                       ],
                     ),
-                    Column(
-                      children: <Widget>[
-                        const Divider(thickness: 2),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text('SUBTOTAL', style: Theme.of(context).textTheme.headline5),
-                                  Text('\$${state.cart.subtotalString}', style: Theme.of(context).textTheme.headline5),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text('DELIVERY FEE', style: Theme.of(context).textTheme.headline5),
-                                  Text('\$${state.cart.deliveryFeeString}',
-                                      style: Theme.of(context).textTheme.headline5),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Stack(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 60.0,
-                              decoration: BoxDecoration(color: Colors.black.withAlpha(50)),
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 50.0,
-                                margin: const EdgeInsets.all(5.0),
-                                decoration: const BoxDecoration(color: Colors.black),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text('TOTAL',
-                                          style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white)),
-                                      Text('\$${state.cart.totalString}',
-                                          style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white)),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                    const OrderSummery(),
                   ],
                 ),
               );

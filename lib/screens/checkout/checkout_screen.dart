@@ -1,48 +1,20 @@
 import 'package:e_commerce/screens/checkout/order_now_navbar.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/checkout/checkout_bloc.dart';
 import '../../widgets/custom_appbar.dart';
-import '../../widgets/custom_nav_bar.dart';
 import '../../widgets/order_summery.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController nameController = TextEditingController();
-    TextEditingController addressController = TextEditingController();
-    TextEditingController cityController = TextEditingController();
-    TextEditingController countryController = TextEditingController();
-    TextEditingController zipCodeController = TextEditingController();
-
-    return Scaffold(
-      appBar: CustomAppbar(text: 'Checkout'),
-      bottomNavigationBar: const OrderNowNavBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('CUSTOMER INFORMATION', style: Theme.of(context).textTheme.headline3),
-            _buildTextFormField(emailController, context, 'Email'),
-            _buildTextFormField(nameController, context, 'Full Name'),
-            Text('DELIVERY INFORMATION', style: Theme.of(context).textTheme.headline3),
-            _buildTextFormField(addressController, context, 'Address'),
-            _buildTextFormField(cityController, context, 'City'),
-            _buildTextFormField(countryController, context, 'Country'),
-            _buildTextFormField(zipCodeController, context, 'Zip Code'),
-            Text('ORDER SUMMERY', style: Theme.of(context).textTheme.headline3),
-            const OrderSummery(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Padding _buildTextFormField(TextEditingController controller, BuildContext context, String labelText) {
+  Padding _buildTextFormField(
+    Function(String)? onChanged,
+    BuildContext context,
+    String labelText,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Row(
@@ -53,7 +25,7 @@ class CheckoutScreen extends StatelessWidget {
           ),
           Expanded(
               child: TextFormField(
-            controller: controller,
+            onChanged: onChanged,
             decoration: const InputDecoration(
               isDense: true,
               contentPadding: EdgeInsets.only(left: 10.0),
@@ -63,6 +35,56 @@ class CheckoutScreen extends StatelessWidget {
             ),
           ))
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppbar(text: 'Checkout'),
+      bottomNavigationBar: const OrderNowNavBar(),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: BlocBuilder<CheckoutBloc, CheckoutState>(
+          builder: (context, state) {
+            if (state is CheckoutLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is CheckoutLoaded) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('CUSTOMER INFORMATION', style: Theme.of(context).textTheme.headline3),
+                  _buildTextFormField((value) {
+                    context.read<CheckoutBloc>().add(UpdateCheckout(email: value));
+                  }, context, 'Email'),
+                  _buildTextFormField((value) {
+                    context.read<CheckoutBloc>().add(UpdateCheckout(fullName: value));
+                  }, context, 'Full Name'),
+                  Text('DELIVERY INFORMATION', style: Theme.of(context).textTheme.headline3),
+                  _buildTextFormField((value) {
+                    context.read<CheckoutBloc>().add(UpdateCheckout(address: value));
+                  }, context, 'Address'),
+                  _buildTextFormField((value) {
+                    context.read<CheckoutBloc>().add(UpdateCheckout(city: value));
+                  }, context, 'City'),
+                  _buildTextFormField((value) {
+                    context.read<CheckoutBloc>().add(UpdateCheckout(country: value));
+                  }, context, 'Country'),
+                  _buildTextFormField((value) {
+                    context.read<CheckoutBloc>().add(UpdateCheckout(zipCode: value));
+                  }, context, 'Zip Code'),
+                  Text('ORDER SUMMERY', style: Theme.of(context).textTheme.headline3),
+                  const OrderSummery(),
+                ],
+              );
+            } else {
+              return const Text('Something went wrong', style: TextStyle());
+            }
+          },
+        ),
       ),
     );
   }

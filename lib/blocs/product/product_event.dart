@@ -6,11 +6,11 @@ abstract class ProductEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoadProduct extends ProductEvent {}
+class LoadProducts extends ProductEvent {}
 
-class UpdateProduct extends ProductEvent {
+class UpdateProducts extends ProductEvent {
   final List<Product> products;
-  UpdateProduct(this.products);
+  UpdateProducts(this.products);
 
   @override
   List<Object?> get props => [products];

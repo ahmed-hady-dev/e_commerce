@@ -31,8 +31,8 @@ class WishlistScreen extends StatelessWidget {
                   return ProductCard(
                     product: state.wishlist.products[index],
                     widthFactor: 1.1,
-                    leftPosition: 100,
-                    isWishlist: true,
+                    // leftPosition: 100,
+                    // isWishlist: true,
                   );
                 });
           } else {

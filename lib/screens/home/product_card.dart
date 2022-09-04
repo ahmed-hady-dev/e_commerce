@@ -1,34 +1,37 @@
-import 'package:e_commerce/core/router/router.dart';
-import 'package:e_commerce/model/product_model.dart';
-import 'package:e_commerce/screens/product/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../blocs/cart/cart_bloc.dart';
+import '../../model/product_model.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
   final double widthFactor;
-  final double leftPosition;
-  final bool isWishlist;
+  final bool additionalButtons;
 
   const ProductCard({
     Key? key,
     required this.product,
-    this.widthFactor = 2.5,
-    this.leftPosition = 5,
-    this.isWishlist = false,
+    this.widthFactor = 2.25,
+    this.additionalButtons = false,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    var widthValue = MediaQuery.of(context).size.width / widthFactor;
+    final double widthValue = MediaQuery.of(context).size.width / widthFactor;
+
     return InkWell(
-      onTap: () => MagicRouter.navigateTo(ProductScreen(product: product)),
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          '/product',
+          arguments: product,
+        );
+      },
       child: Stack(
-        children: [
+        children: <Widget>[
           Container(
             width: widthValue,
-            height: 150.0,
+            height: 150,
             child: Image.network(
               product.imageUrl,
               fit: BoxFit.cover,
@@ -36,82 +39,102 @@ class ProductCard extends StatelessWidget {
           ),
           Positioned(
             top: 60,
-            left: leftPosition,
+            left: 5,
             child: Container(
-              width: widthValue - 5 - leftPosition,
-              height: 80.0,
+              width: widthValue - 10,
+              height: 80,
               alignment: Alignment.bottomCenter,
-              decoration: BoxDecoration(color: Colors.black.withAlpha(50)),
+              decoration: BoxDecoration(
+                color: Colors.black.withAlpha(50),
+              ),
             ),
           ),
           Positioned(
             top: 65,
-            left: leftPosition + 5,
+            left: 10,
             child: Container(
-                width: widthValue - 15 - leftPosition,
-                height: 70.0,
-                alignment: Alignment.bottomCenter,
-                decoration: const BoxDecoration(color: Colors.black),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              product.name,
-                              style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),
-                            ),
-                            Text(
-                              "\$${product.price.toString()}",
-                              style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white),
-                            ),
-                          ],
+              width: widthValue - 20,
+              height: 70,
+              alignment: Alignment.bottomCenter,
+              decoration: BoxDecoration(
+                color: Colors.black,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.name,
+                          style: Theme.of(context).textTheme.headline5!.copyWith(
+                                color: Colors.white,
+                              ),
                         ),
-                      ),
-                      BlocBuilder<CartBloc, CartState>(
-                        builder: (context, state) {
-                          if (state is CartLoading) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                          if (state is CartLoaded) {
-                            return Expanded(
-                              child: IconButton(
-                                onPressed: () {
-                                  context.read<CartBloc>().add(CartProductAdded(product));
-                                  final snackBar =
-                                      SnackBar(content: Text('Product added to cart', style: const TextStyle()));
-                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                },
-                                icon: const Icon(
+                        Text(
+                          '\$${product.price}',
+                          style: Theme.of(context).textTheme.headline6!.copyWith(
+                                color: Colors.white,
+                              ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        BlocBuilder<CartBloc, CartState>(
+                          builder: (context, state) {
+                            if (state is CartLoading) {
+                              return Center(
+                                child: CircularProgressIndicator(color: Colors.white),
+                              );
+                            }
+                            if (state is CartLoaded) {
+                              return IconButton(
+                                icon: Icon(
                                   Icons.add_circle,
                                   color: Colors.white,
                                 ),
-                              ),
-                            );
-                          } else {
-                            return const Text('Something went wrong', style: TextStyle());
-                          }
-                        },
-                      ),
-                      isWishlist
-                          ? Expanded(
-                              child: IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
+                                onPressed: () {
+                                  final snackBar = SnackBar(
+                                    content: Text('Added to your Cart!'),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                                  context.read<CartBloc>().add(
+                                        AddProduct(product),
+                                      );
+                                },
+                              );
+                            } else {
+                              return Text('Something went wrong.');
+                            }
+                          },
+                        ),
+                        additionalButtons
+                            ? IconButton(
+                                padding: EdgeInsets.zero,
+                                icon: Icon(
                                   Icons.delete,
                                   color: Colors.white,
                                 ),
-                              ),
-                            )
-                          : const SizedBox()
-                    ],
-                  ),
-                )),
+                                onPressed: () {
+                                  final snackBar = SnackBar(
+                                    content: Text('Removed from your Wishlist!'),
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                  // context.read<WishlistBloc>().add(AddProductToWishlist(product));
+                                },
+                              )
+                            : SizedBox()
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),

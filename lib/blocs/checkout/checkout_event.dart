@@ -1,6 +1,5 @@
 part of 'checkout_bloc.dart';
 
-@immutable
 abstract class CheckoutEvent extends Equatable {
   @override
   List<Object?> get props => [];

@@ -34,7 +34,7 @@ class ProductScreen extends StatelessWidget {
                     builder: (context, state) {
                       return IconButton(
                           onPressed: () {
-                            context.read<WishlistBloc>().add(AddWishlistProduct(product));
+                            context.read<WishlistBloc>().add(AddProductToWishlist(product));
                             final snackBar =
                                 SnackBar(content: Text('added to your Wishlist!', style: const TextStyle()));
                             ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -50,7 +50,7 @@ class ProductScreen extends StatelessWidget {
                       return ElevatedButton(
                           style: ElevatedButton.styleFrom(primary: Colors.white),
                           onPressed: () {
-                            context.read<CartBloc>().add(CartProductAdded(product));
+                            context.read<CartBloc>().add(AddProduct(product));
                             MagicRouter.navigateTo(CartScreen());
                           },
                           child: Text('ADD TO CART', style: Theme.of(context).textTheme.headline3));

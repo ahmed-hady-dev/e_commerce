@@ -3,14 +3,14 @@ import 'package:e_commerce/blocs/category/category_bloc.dart';
 import 'package:e_commerce/blocs/checkout/checkout_bloc.dart';
 import 'package:e_commerce/blocs/wishlist/wishlist_bloc.dart';
 import 'package:e_commerce/repositories/category/category_repository.dart';
-import 'package:e_commerce/repositories/checkout/checkout_reposiory.dart';
+import 'package:e_commerce/repositories/checkout/checkout_repository.dart';
 import 'package:e_commerce/repositories/product/product_repository.dart';
-import 'package:e_commerce/simple_bloc_observer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/product/product_bloc.dart';
+import 'core/blocObserver/bloc_observer.dart';
 import 'core/getStorageCacheHelper/get_storage_cache_helper.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/theme_cubit.dart';
@@ -41,24 +41,17 @@ void main() async {
   await CacheHelper.getTheme ?? await CacheHelper.cacheTheme(value: false);
   bool? isDark = await CacheHelper.getTheme;
   //===============================================================
-  Bloc.observer = SimpleBlocObserver();
-  runApp(EasyLocalization(
-    child: MyApp(isDark: isDark!),
-    path: 'assets/translation',
-    supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
-    fallbackLocale: const Locale('en', 'US'),
-  ));
-  // BlocOverrides.runZoned(
-  //   () {
-  //     runApp(EasyLocalization(
-  //       child: MyApp(isDark: isDark!),
-  //       path: 'assets/translation',
-  //       supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
-  //       fallbackLocale: const Locale('en', 'US'),
-  //     ));
-  //   },
-  //   blocObserver: MyBlocObserver(),
-  // );
+  BlocOverrides.runZoned(
+    () {
+      runApp(EasyLocalization(
+        path: 'assets/translation',
+        supportedLocales: const [Locale('en', 'US'), Locale('ar', 'EG')],
+        fallbackLocale: const Locale('en', 'US'),
+        child: MyApp(isDark: isDark!),
+      ));
+    },
+    blocObserver: MyBlocObserver(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -68,8 +61,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => WishlistBloc()..add(StartWishlist())),
-          BlocProvider(create: (_) => CartBloc()..add(CartStarted())),
+          BlocProvider(create: (_) => WishlistBloc()..add(LoadWishlist())),
+          BlocProvider(create: (_) => CartBloc()..add(LoadCart())),
           BlocProvider(
               create: (context) =>
                   CheckoutBloc(cartBloc: context.read<CartBloc>(), checkoutRepository: CheckoutRepository())),
@@ -82,7 +75,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => ProductBloc(
               productRepository: ProductRepository(),
-            )..add(LoadProduct()),
+            )..add(LoadProducts()),
           ),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(

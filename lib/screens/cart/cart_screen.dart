@@ -24,7 +24,7 @@ class CartScreen extends StatelessWidget {
                   children: <Widget>[
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.white),
-                        onPressed: () => MagicRouter.navigateTo(const CheckoutScreen()),
+                        onPressed: () => MagicRouter.navigateTo(CheckoutScreen()),
                         child: Text('GO TO CHECKOUT', style: Theme.of(context).textTheme.headline3))
                   ],
                 ))),

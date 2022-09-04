@@ -1,9 +1,13 @@
-import 'package:e_commerce/core/router/router.dart';
-import 'package:e_commerce/screens/order_confirmation/order_confrmation_screen.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/checkout/checkout_bloc.dart';
+import '../../core/router/router.dart';
+import '../../model/payment_method_model.dart';
+import '../../widgets/google_pay.dart';
+import '../payment_selection/payment_selection_screen.dart';
 
 class OrderNowNavBar extends StatelessWidget {
   const OrderNowNavBar({
@@ -12,35 +16,51 @@ class OrderNowNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      color: Colors.black,
-      child: Container(
-          height: 70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              BlocBuilder<CheckoutBloc, CheckoutState>(
-                builder: (context, state) {
-                  if (state is CheckoutLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (state is CheckoutLoaded) {
-                    return ElevatedButton(
-                      onPressed: () {
-                        context.read<CheckoutBloc>().add(ConfirmCheckout(checkout: state.checkout));
-                        MagicRouter.navigateTo(const OrderConfirmationScreen());
-                      },
-                      style: ElevatedButton.styleFrom(primary: Colors.white, shape: const RoundedRectangleBorder()),
-                      child: Text('ORDER NOW', style: Theme.of(context).textTheme.headline3),
-                    );
-                  } else {
-                    return const Text('Something went wrong', style: TextStyle());
-                  }
-                },
-              ),
-            ],
-          )),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        BlocBuilder<CheckoutBloc, CheckoutState>(
+          builder: (context, state) {
+            if (state is CheckoutLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              );
+            }
+            if (state is CheckoutLoaded) {
+              if (state.paymentMethod == PaymentMethod.credit_card) {
+                return Container(
+                  child: Text(
+                    'Pay with Credit Card',
+                    style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),
+                  ),
+                );
+              }
+              if (Platform.isAndroid && state.paymentMethod == PaymentMethod.google_pay) {
+                return GooglePay(
+                  products: state.products!,
+                  total: state.total!,
+                );
+              } else {
+                return ElevatedButton(
+                  onPressed: () {
+                    MagicRouter.navigateTo(PaymentSelectionScreen());
+                  },
+                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                  child: Text(
+                    'CHOOSE PAYMENT',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                );
+              }
+            } else {
+              return Text('Something went wrong');
+            }
+          },
+        ),
+      ],
     );
   }
 }

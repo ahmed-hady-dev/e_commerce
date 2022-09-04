@@ -1,6 +1,8 @@
 part of 'checkout_bloc.dart';
 
 abstract class CheckoutState extends Equatable {
+  const CheckoutState();
+
   @override
   List<Object?> get props => [];
 }
@@ -19,6 +21,8 @@ class CheckoutLoaded extends CheckoutState {
   final String? deliveryFee;
   final String? total;
   final Checkout checkout;
+  final PaymentMethod paymentMethod;
+
   CheckoutLoaded({
     this.fullName,
     this.email,
@@ -30,18 +34,33 @@ class CheckoutLoaded extends CheckoutState {
     this.subtotal,
     this.deliveryFee,
     this.total,
+    this.paymentMethod = PaymentMethod.google_pay,
   }) : checkout = Checkout(
-            fullName: fullName,
-            email: email,
-            address: address,
-            city: city,
-            country: country,
-            zipCode: zipCode,
-            products: products,
-            subtotal: subtotal,
-            deliveryFee: deliveryFee,
-            total: total);
+          fullName: fullName,
+          email: email,
+          address: address,
+          city: city,
+          country: country,
+          zipCode: zipCode,
+          products: products,
+          subtotal: subtotal,
+          deliveryFee: deliveryFee,
+          total: total,
+        );
 
   @override
-  List<Object?> get props => [fullName, email, address, city, country, zipCode, products, subtotal, deliveryFee, total];
+  List<Object?> get props => [
+        fullName,
+        email,
+        address,
+        city,
+        country,
+        zipCode,
+        products,
+        subtotal,
+        deliveryFee,
+        total,
+        checkout,
+        paymentMethod,
+      ];
 }

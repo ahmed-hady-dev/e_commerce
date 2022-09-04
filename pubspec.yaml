@@ -74,6 +74,7 @@ flutter:
     - assets/images/
     - assets/svgs/
     - assets/translation/
+    - assets/
 
 #  fonts:
 #   - family: #put the font name here
